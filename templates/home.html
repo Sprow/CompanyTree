@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tree</title>
+</head>
+<body>
+    <div>{{ boss.first_name }} {{ boss.last_name }}</div>
+    <div>Position: {{ boss.position }}</div>
+    <div>Date joined: {{ boss.date_joined }}</div>
+    <div>Salary: {{ boss.salary }}</div>
+    <br>
+    <div>
+        subordinates: <br>
+        <br>
+        {% for child in children %}
+            <a href="{% url 'single_account' account_id=child.id %}">{{ child.first_name }} {{ child.last_name }}</a> <br>
+        {% endfor %}
+
+    </div>
+
+</body>
+
+</html>
