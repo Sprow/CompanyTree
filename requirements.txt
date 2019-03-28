@@ -1,8 +1,7 @@
-appdirs==1.4.3
-Django==1.11
-djangorestframework==3.6.2
-drfdocs==0.0.11
-packaging==16.8
-pyparsing==2.2.0
-pytz==2017.2
-six==1.10.0
+Django==2.1.7
+django-seed==0.1.9
+Faker==1.0.4
+python-dateutil==2.8.0
+pytz==2018.9
+six==1.12.0
+text-unidecode==1.2

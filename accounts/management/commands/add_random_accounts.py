@@ -1,10 +1,62 @@
 from django.core.management.base import BaseCommand
 
+from django_seed import Seed
+
+
 from accounts.models import User
 from random import randint
-import datetime
+# import datetime
 
-# python manage.py add_random_accounts NUMBER OF ACCOUNTS YOUR WHANT TO CREATE
+# python manage.py add_random_accounts NUMBER OF ACCOUNTS YOUR WANT TO CREATE
+
+
+class MySeed:
+    def __init__(self, amount_of_workers):
+        self.amount_of_workers = amount_of_workers
+        self.first_name = self.first_name_list[randint(0, len(self.first_name_list)-1)]
+        self.last_name = self.last_name_list[randint(0, len(self.last_name_list)-1)]
+
+    first_name_list = ['Ressie', 'Carmine', 'Chi', 'Keeley', 'Dung', 'Richelle', 'Mari', 'Sal', 'Cecil',
+                       'Nicole', 'Janee', 'Rigoberto', 'Katheleen', 'Lyman', 'Esteban', 'Madison', 'Shaquana', 'Rickie',
+                       'Olin', 'Billie', 'Warner', 'Claud', 'Cornelius', 'Cyril', 'Robert', 'Regalado',
+                       'Kendrick', 'Woodrow', 'Alex', 'Willy']
+    last_name_list = ['Speelman', 'Page', 'Kindell', 'Mclees', 'Marion', 'Lenihan', 'Meister', 'Obyrne',
+                      'Rhymes', 'Beech', 'Caudill', 'Mcfadin', 'Vigna', 'Koss', 'Stonerock', 'Lundin', 'Biro',
+                      'Coupe', 'Persing', 'Fast', 'Zawislak', 'Gholston', 'Yadao', 'Dugal', 'Aucoin', 'Regalado',
+                      'Fonner', 'Lacourse', 'Cool', 'Dodrill']
+
+    def parent_id(self, available_ids):
+        ids = available_ids[User]
+        if len(ids) > 0:
+            pk = ids[len(ids)-1] + 1
+        else:
+            pk = 1
+
+        if pk == 1:
+            return None
+        elif pk <= int(self.amount_of_workers / 100 * 5):
+            return 1
+        elif pk <= int(self.amount_of_workers / 100 * 15):
+            return randint(2, int(self.amount_of_workers / 100 * 5)-1)
+        elif pk <= int(self.amount_of_workers / 100 * 45):
+            return randint(int(self.amount_of_workers / 100 * 30), int(self.amount_of_workers / 100 * 45)-1)
+        else:
+            return randint(int(self.amount_of_workers / 100 * 45), self.amount_of_workers)
+
+    def change_first_name(self, _):
+        self.first_name = self.first_name_list[randint(0, len(self.first_name_list)-1)]
+        return self.first_name
+
+    def change_last_name(self, _):
+        self.last_name = self.last_name_list[randint(0, len(self.last_name_list)-1)]
+        return self.last_name
+
+    def user_name(self, available_ids):
+        ids = available_ids[User]
+        if len(ids) == 0:
+            return self.first_name + self.last_name + "1"
+        else:
+            return self.first_name + self.last_name + str(ids[len(ids)-1]+1)
 
 
 class Command(BaseCommand):
@@ -13,70 +65,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         amount_of_workers = options['amount_of_workers']
+        seeder = Seed.seeder()
+        my_seed = MySeed(amount_of_workers)
 
-        def make_random_acc(amount_of_workers):
-            first_name_list = ['Ressie', 'Carmine', 'Chi', 'Keeley', 'Dung', 'Richelle', 'Mari', 'Sal', 'Cecil',
-                               'Nicole',
-                               'Janee', 'Rigoberto', 'Katheleen', 'Lyman', 'Esteban', 'Madison', 'Shaquana', 'Rickie',
-                               'Olin', 'Billie', 'Warner', 'Claud', 'Cornelius', 'Cyril', 'Robert', 'Regalado',
-                               'Kendrick',
-                               'Woodrow', 'Alex', 'Willy']
-            last_name_list = ['Speelman', 'Page', 'Kindell', 'Mclees', 'Marion', 'Lenihan', 'Meister', 'Obyrne',
-                              'Rhymes',
-                              'Beech', 'Caudill', 'Mcfadin', 'Vigna', 'Koss', 'Stonerock', 'Lundin', 'Biro', 'Coupe',
-                              'Persing', 'Fast', 'Zawislak', 'Gholston', 'Yadao', 'Dugal', 'Aucoin', 'Regalado',
-                              'Fonner',
-                              'Lacourse', 'Cool', 'Dodrill']
-            workers_list = {5: [], 4: [], 3: [], 2: [], 1: []}
-            for i in range(1, amount_of_workers+1):
-                if i == 1:
-                    level = 5
-                elif i <= amount_of_workers/100*5:
-                    level = 4
-                    id_min, id_max = 1, 1
-                elif i <= amount_of_workers/100*15:
-                    level = 3
-                    id_min, id_max = 2, amount_of_workers / 100 * 5
-                elif i <= amount_of_workers/100*45:
-                    level = 2
-                    id_min, id_max = amount_of_workers / 100 * 5, amount_of_workers / 100 * 30
-                else:
-                    level = 1
-                    id_min, id_max = amount_of_workers / 100 * 30, amount_of_workers / 100 * 55
+        seeder.add_entity(User, amount_of_workers, {
+            'parent_id': my_seed.parent_id,
+            'is_superuser': 0,
+            'first_name': my_seed.change_first_name,
+            'last_name': my_seed.change_last_name,
+            'username': my_seed.user_name,
+        })
 
-                rand_first_name = first_name_list[randint(0, len(first_name_list)-1)]
-
-                rand_last_name = last_name_list[randint(0, len(last_name_list)-1)]
-
-                rand_username = rand_first_name+rand_last_name+str(i)
-
-                rand_password = rand_last_name+str(i)
-
-                now = datetime.datetime.now()
-                rand_date_joined = datetime.datetime(now.year - randint(0, 10),
-                                                     now.month - randint(0, now.month - 1),
-                                                     now.day - randint(0, now.day - 1))
-
-                rand_salary = randint(10, 30) * pow(10, level)
-
-                if level == 5:
-                    rand_position = "boss"
-                else:
-                    rand_position = "Position" + str(randint(1, 1000))
-
-                workers_list[level].append(rand_username)
-
-                if i == 1:
-                    rand_parent_id = None
-                else:
-                    rand_parent_id = randint(id_min, id_max)
-
-                User.objects.create(parent_id=rand_parent_id,
-                                    username=rand_username,
-                                    password=rand_password,
-                                    first_name=rand_first_name,
-                                    last_name=rand_last_name,
-                                    date_joined=rand_date_joined,
-                                    salary=rand_salary,
-                                    position=rand_position)
-        make_random_acc(amount_of_workers)
+        inserted_pks = seeder.execute()
