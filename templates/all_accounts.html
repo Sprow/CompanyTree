@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "stylesheet/all_accounts.css" %}">
+{% endblock %}
+
+{% block content %}
+    {% for name in search_result %}
+        {{ name.date_joined.year }}
+    {% endfor %}
+
+    <form id="search_form" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Search &#128269;">
+{#        <input type="hidden" value="{{ last_page }}">#}
+{#        <input type="hidden" value="{{ current_page }}">#}
+{#        <input type="hidden" value="{{ search_form.total_pages }}">#}
+{#        {% render_field search_form.page_number %}#}
+{#        {% render_field search_form.total_pages %}#}
+        <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        <div class="input-group mb-1">
+                            {% render_field search_form.first_name class="form-control" placeholder="Name"%}
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="input-group mb-1">
+                            {% render_field search_form.last_name class="form-control" placeholder="Surname"%}
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="input-group mb-1">
+                            {% render_field search_form.position class="custom-select" id="inputGroupSelect02" %}
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="input-group mb-1">
+                            {% render_field search_form.year class="custom-select" id="inputGroupSelect02"%}
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="input-group mb-1">
+                            {% render_field search_form.salary_min class="form-control" placeholder="min"%}
+                            {% render_field search_form.salary_max class="form-control" placeholder="max"%}
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <th scope="col"><span class="arrow">id &#11015; &#11014;</span></th>
+                    <th scope="col"><span class="arrow">Name &#11015; &#11014;</span></th>
+                    <th scope="col"><span class="arrow">Surname &#11015; &#11014;</span></th>
+                    <th scope="col"><span class="arrow">Position &#11015; &#11014;</span></th>
+                    <th scope="col"><span class="arrow">Date joined  &#11015; &#11014;</span></th>
+                    <th scope="col"><span class="arrow">Salary &#11015; &#11014;</span></th>
+                </tr>
+            </thead>
+
+            <tbody id="my_tbody"></tbody>
+            <script id="js_template" type="x-tmpl-mustache">
+            {% verbatim %}
+                {{#acc_data}}
+                    {{#data}}
+                        <tr>
+                            <th>{{id}}</th>
+                            <td>{{first_name}}</td>
+                            <td>{{last_name}}</td>
+                            <td>{{position}}</td>
+                            <td>{{date_joined}}</td>
+                            <td>{{salary}}</td>
+                        </tr>
+                    {{/data}}
+                {{/acc_data}}
+            {% endverbatim %}
+            </script>
+        </table>
+
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            {% if all_accounts.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ all_accounts.previous_page_number }}">Previous</a></li>
+            {% endif %}
+
+            {% for page_num in paginator_gen_list %}
+                {% if page_num != "..." %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if all_accounts.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ all_accounts.next_page_number }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ last_page }}">Last</a></li>
+            {% endif %}
+
+
+          </ul>
+        </nav>
+    </form>
+{% endblock %}
+
+{% block js %}
+        <script src="{% static "javascript/all_accounts.js" %}"></script>
+        <script src="{% static "javascript/mustache.min.js" %}"></script>
+{#        <script src="{% static "javascript/mustache.js" %}"></script>#}
+{#        <script src="https://raw.githubusercontent.com/janl/mustache.js/master/mustache.js"></script>#}
+{% endblock %}

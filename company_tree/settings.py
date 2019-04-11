@@ -28,6 +28,12 @@ INSTALLED_APPS = [
 
     'django_seed',
 
+    # django-jstemplate
+    # 'mustachejs',
+
+    # https://github.com/jazzband/django-widget-tweaks
+    'widget_tweaks',
+
     'accounts',
 ]
 
@@ -46,7 +52,7 @@ ROOT_URLCONF = 'company_tree.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates',],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -58,6 +64,20 @@ TEMPLATES = [
         },
     },
 ]
+
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'mustachejs',
+#         'DIRS': ['templates'],
+#         'APP_DIRS': False,
+#         'OPTIONS': {
+#             'context_processors': ['...'],
+#             'partials_dir': 'partials',
+#             'file_extension': 'html',
+#         }
+#     },
+#     # ...
+# ]
 
 WSGI_APPLICATION = 'company_tree.wsgi.application'
 
@@ -112,3 +132,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]

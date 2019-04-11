@@ -37,7 +37,7 @@ class MySeed:
         elif pk <= int(self.amount_of_workers / 100 * 5):
             return 1
         elif pk <= int(self.amount_of_workers / 100 * 15):
-            return randint(2, int(self.amount_of_workers / 100 * 5)-1)
+            return randint(2, int(self.amount_of_workers / 100 * 15)-1)
         elif pk <= int(self.amount_of_workers / 100 * 45):
             return randint(int(self.amount_of_workers / 100 * 30), int(self.amount_of_workers / 100 * 45)-1)
         else:
@@ -70,10 +70,10 @@ class Command(BaseCommand):
 
         seeder.add_entity(User, amount_of_workers, {
             'parent_id': my_seed.parent_id,
-            'is_superuser': 0,
+            # 'is_superuser': 0,
+            'username': my_seed.user_name,
             'first_name': my_seed.change_first_name,
             'last_name': my_seed.change_last_name,
-            'username': my_seed.user_name,
         })
 
         inserted_pks = seeder.execute()

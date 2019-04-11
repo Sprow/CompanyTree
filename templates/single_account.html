@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
     <div>{{ account.first_name }} {{ account.last_name }}</div>
     <div>Position: {{ account.position }}</div>
     <div>Date joined: {{ account.date_joined }}</div>
@@ -15,13 +11,8 @@
             subordinates: <br>
             <br>
             {% for child in children %}
-                <a href="{% url 'single_account' account_id=child.id %}">{{ child.first_name }} {{ child.last_name }}</a> <br>
+                <a class="badge badge-secondary" href="{% url 'single_account' account_id=child.id %}">{{ child.first_name }} {{ child.last_name }}</a> <br>
             {% endfor %}
         {% endif %}
-
-
-
     </div>
-
-</body>
-</html>
+{% endblock %}
