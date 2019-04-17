@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from utils import gen_page_list
 import json
+import math
 
 
 def accounts(request):
@@ -87,17 +88,31 @@ def search(request):
                         my_filter["salary__lte"] = search_form.cleaned_data["salary_max"]
 
                 search_result = User.objects.filter(**my_filter)
-
-                total_pages = int(len(search_result)/5)
-
+                items_count = int(len(search_result))
+                items_per_page = 10
+                total_pages = math.ceil(items_count/items_per_page)
                 if request.GET.get('page'):
-                    current_page = request.GET.get('page')
+                    current_page = int(request.GET.get('page'))
                 else:
-                    current_page = "1"
+                    current_page = 1
 
-                result_obj = {"total_pages": total_pages,
+                search_result2 = None
+                if current_page == 1 and current_page == total_pages:
+                    search_result2 = User.objects.filter(**my_filter)[0:items_count]
+                elif current_page == 1:
+                    search_result2 = User.objects.filter(**my_filter)[0:items_per_page]
+                elif current_page > 1 and current_page == total_pages:
+                    search_result2 = User.objects.filter(**my_filter)[(current_page-1)*10:items_count]
+                elif current_page > 1:
+                    search_result2 = User.objects.filter(**my_filter)[(current_page-1)*10:current_page*10]
+
+                # print('search_result ->', search_result)
+                # print('search_result2 ->', search_result2)
+                # print('search_result ->', type(list(search_result.values())))
+                # print('search_result2 ->', type(search_result2))
+                result_obj = {"items_count": items_count,
                               "current_page": current_page,
-                              "data": list(search_result.values())}
+                              "data": list(search_result2.values())}
                 # search_result_json = serializers.serialize('json', User.objects.filter(**my_filter))
                 search_result_json = json.dumps(result_obj, default=str)
                 # print(len(search_result))
@@ -109,20 +124,20 @@ def search(request):
                 # print('after filter json>', type(search_result_json))
 
                 return HttpResponse(search_result_json, content_type='application/json')
-    else:
-        # my_json = serializers.serialize('json', User.objects.all())
-        all_acc = User.objects.all()
-
-        total_pages = int(len(all_acc) / 5)
-
-        if request.GET.get('page'):
-            current_page = request.GET.get('page')
-        else:
-            current_page = "1"
-        result_obj = {"total_pages": total_pages,
-                      "current_page": current_page,
-                      "data": list(all_acc.values())}
-        # return HttpResponse(my_json, content_type='application/json')
-        return HttpResponse(json.dumps(result_obj, default=str))
+    # else:
+    #     # my_json = serializers.serialize('json', User.objects.all())
+    #     all_acc = User.objects.all()
+    #
+    #     total_pages = int(len(all_acc) / 5)
+    #
+    #     if request.GET.get('page'):
+    #         current_page = request.GET.get('page')
+    #     else:
+    #         current_page = "1"
+    #     result_obj = {"total_pages": total_pages,
+    #                   "current_page": current_page,
+    #                   "data": list(all_acc.values())}
+    #     # return HttpResponse(my_json, content_type='application/json')
+    #     return HttpResponse(json.dumps(result_obj, default=str))
 
 
