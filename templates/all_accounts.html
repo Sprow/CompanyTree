@@ -13,8 +13,6 @@
 
     <form id="search_form" method="POST">
         {% csrf_token %}
-        <input type="submit" value="Search &#128269;">
-
         <table id="dtBasicExample" class="table table-hover table-dark paginated">
             <thead>
                 <tr>
@@ -47,14 +45,14 @@
                     </th>
                 </tr>
             </thead>
-            <thead>
+            <thead class="thead-arrows__sort">
                 <tr>
-                    <th scope="col"><span class="arrow">id &#11015; &#11014;</span></th>
-                    <th scope="col"><span class="arrow">Name &#11015; &#11014;</span></th>
-                    <th scope="col"><span class="arrow">Surname &#11015; &#11014;</span></th>
-                    <th scope="col"><span class="arrow">Position &#11015; &#11014;</span></th>
-                    <th scope="col"><span class="arrow">Date joined  &#11015; &#11014;</span></th>
-                    <th scope="col"><span class="arrow">Salary &#11015; &#11014;</span></th>
+                    <th scope="col"><span class="arrow">id <span class="arrows" data-sort="id">&#11015; &#11014;</span></span></th>
+                    <th scope="col"><span class="arrow">Name <span class="arrows" data-sort="first_name">&#11015; &#11014;</span></span></th>
+                    <th scope="col"><span class="arrow">Surname <span class="arrows" data-sort="last_name">&#11015; &#11014;</span></span></th>
+                    <th scope="col"><span class="arrow">Position <span class="arrows" data-sort="position">&#11015; &#11014;</span></span></th>
+                    <th scope="col"><span class="arrow">Date joined  <span class="arrows" data-sort="date_joined">&#11015; &#11014;</span></span></th>
+                    <th scope="col"><span class="arrow">Salary <span class="arrows" data-sort="salary">&#11015; &#11014;</span></span></th>
                 </tr>
             </thead>
 
