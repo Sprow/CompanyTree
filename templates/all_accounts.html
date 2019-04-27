@@ -7,24 +7,26 @@
 {% endblock %}
 
 {% block content %}
-    {% for name in search_result %}
-        {{ name.date_joined.year }}
-    {% endfor %}
+{#    {% for name in search_result %}#}
+{#        {{ name.date_joined.year }}#}
+{#    {% endfor %}#}
+    {{ sign_in_error }}
 
-    <form id="search_form" method="POST">
-        {% csrf_token %}
-        <table id="dtBasicExample" class="table table-hover table-dark paginated">
-            <thead>
+    {% if request.user.is_authenticated %}
+        <form id="search_form" method="POST">
+            {% csrf_token %}
+            <table id="dtBasicExample" class="table table-hover table-dark paginated">
+                <thead>
                 <tr>
                     <th scope="col"></th>
                     <th scope="col">
                         <div class="input-group mb-1">
-                            {% render_field search_form.first_name class="form-control" placeholder="Name"%}
+                            {% render_field search_form.first_name class="form-control" placeholder="Name" %}
                         </div>
                     </th>
                     <th scope="col">
                         <div class="input-group mb-1">
-                            {% render_field search_form.last_name class="form-control" placeholder="Surname"%}
+                            {% render_field search_form.last_name class="form-control" placeholder="Surname" %}
                         </div>
                     </th>
                     <th scope="col">
@@ -34,30 +36,37 @@
                     </th>
                     <th scope="col">
                         <div class="input-group mb-1">
-                            {% render_field search_form.year class="custom-select" id="inputGroupSelect02"%}
+                            {% render_field search_form.year class="custom-select" id="inputGroupSelect02" %}
                         </div>
                     </th>
                     <th scope="col">
                         <div class="input-group mb-1">
-                            {% render_field search_form.salary_min class="form-control" placeholder="min"%}
-                            {% render_field search_form.salary_max class="form-control" placeholder="max"%}
+                            {% render_field search_form.salary_min class="form-control" placeholder="min" %}
+                            {% render_field search_form.salary_max class="form-control" placeholder="max" %}
                         </div>
                     </th>
                 </tr>
-            </thead>
-            <thead class="thead-arrows__sort">
+                </thead>
+                <thead class="thead-arrows__sort">
                 <tr>
-                    <th scope="col"><span class="arrow">id <span class="arrows" data-sort="id">&#11015; &#11014;</span></span></th>
-                    <th scope="col"><span class="arrow">Name <span class="arrows" data-sort="first_name">&#11015; &#11014;</span></span></th>
-                    <th scope="col"><span class="arrow">Surname <span class="arrows" data-sort="last_name">&#11015; &#11014;</span></span></th>
-                    <th scope="col"><span class="arrow">Position <span class="arrows" data-sort="position">&#11015; &#11014;</span></span></th>
-                    <th scope="col"><span class="arrow">Date joined  <span class="arrows" data-sort="date_joined">&#11015; &#11014;</span></span></th>
-                    <th scope="col"><span class="arrow">Salary <span class="arrows" data-sort="salary">&#11015; &#11014;</span></span></th>
+                    <th scope="col"><span class="arrow">id <span class="arrows" data-sort="id">&#11015; &#11014;</span></span>
+                    </th>
+                    <th scope="col"><span class="arrow">Name <span class="arrows" data-sort="first_name">&#11015; &#11014;</span></span>
+                    </th>
+                    <th scope="col"><span class="arrow">Surname <span class="arrows" data-sort="last_name">&#11015; &#11014;</span></span>
+                    </th>
+                    <th scope="col"><span class="arrow">Position <span class="arrows" data-sort="position">&#11015; &#11014;</span></span>
+                    </th>
+                    <th scope="col"><span class="arrow">Date joined  <span class="arrows" data-sort="date_joined">&#11015; &#11014;</span></span>
+                    </th>
+                    <th scope="col"><span class="arrow">Salary <span class="arrows"
+                                                                     data-sort="salary">&#11015; &#11014;</span></span>
+                    </th>
                 </tr>
-            </thead>
+                </thead>
 
-            <tbody id="my_tbody"></tbody>
-            <script id="js_template" type="x-tmpl-mustache">
+                <tbody id="my_tbody"></tbody>
+                <script id="js_template" type="x-tmpl-mustache">
             {% verbatim %}
                 {{#data}}
                     <tr>
@@ -70,9 +79,10 @@
                     </tr>
                 {{/data}}
             {% endverbatim %}
-            </script>
-        </table>
-        <script id="pagination_template" type="x-tmpl-mustache">
+
+                </script>
+            </table>
+            <script id="pagination_template" type="x-tmpl-mustache">
         {% verbatim %}
             <nav aria-label="...">
                 <ul class="pagination">
@@ -84,10 +94,20 @@
                 </ul>
             </nav>
         {% endverbatim %}
-        </script>
-        <div id="pagination"></div>
 
-    </form>
+            </script>
+            <div id="pagination"></div>
+
+        </form>
+    {% else %}
+        <br>
+        <a class="nav_link" href="{% url 'registration' %}">Registrate</a>
+        <br>
+        <a class="nav_link" href="{% url 'login' %}">Sign In</a>
+
+    {% endif %}
+
+
 {% endblock %}
 
 {% block js %}

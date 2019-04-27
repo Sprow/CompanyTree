@@ -1,4 +1,4 @@
-function newNavigator() {
+function tableNavigator() {
     let obj = {};
     obj.page = 1;
     obj.order_by = 'id';
@@ -101,7 +101,7 @@ function newNavigator() {
     return obj;
 }
 
-let nav = newNavigator();
+let nav = tableNavigator();
 
 $( "#search_form input" ).on( "input", nav.searchWithDelay );
 $( "#search_form select" ).on( "change", nav.search );

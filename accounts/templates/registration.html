@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <form action="{% url 'registration' %}" method="POST">
+        {% csrf_token %}
+
+        {{ pass_error }}
+        {{ username_error }}
+
+        {% if form.username.errors %}
+            {{ form.username.errors }}
+        {% endif %}
+        <div>
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+        </div>
+
+        {% if form.password1.errors %}
+            {{ form.password1.errors }}
+        {% endif %}
+        <div>
+            <label for="{{ form.password1.id_for_label }}">Password</label>
+            {{ form.password1 }}
+        </div>
+
+        {% if form.password2.errors %}
+            {{ form.password2.errors }}
+        {% endif %}
+        <div>
+            <label for="{{ form.password2.id_for_label }}">Confirm password</label>
+            {{ form.password2 }}
+        </div>
+
+        {% if form.email.errors %}
+            {{ form.email.errors }}
+        {% endif %}
+        <div>
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+        </div>
+
+        <div>
+            <label for="{{ form.first_name.id_for_label }}">First name</label>
+            {{ form.first_name }}
+        </div>
+
+        <div>
+            <label for="{{ form.last_name.id_for_label }}">Last name</label>
+            {{ form.last_name }}
+        </div>
+
+        <button type="submit">Registrate</button>
+    </form>
+{% endblock %}

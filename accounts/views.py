@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
+from django.urls import reverse
 from accounts.models import User
 from accounts.forms import SearchForm
 from django.core import serializers
@@ -7,6 +8,66 @@ from django.http import HttpResponse
 
 import json
 import math
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+
+from accounts.forms import LoginForm, RegistrationForm, EditProfileForm
+
+
+@login_required(login_url="/login/")
+def sign_out(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("home"))
+
+
+def sign_in(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("home"))
+    else:
+        form = LoginForm()
+        if request.method == "POST":
+            form = LoginForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                user = authenticate(username=data.get("username"), password=data.get("password"))
+                if user:
+                    login(request, user)
+                    return HttpResponseRedirect(reverse("home"))
+                else:
+                    print("sorry")
+        return render(request, "login.html", {"form": form})
+
+
+def register_user(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("home"))
+    else:
+        form = RegistrationForm()
+        if request.method == 'POST':
+            form = RegistrationForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                password1 = data.get('password1')
+                password2 = data.get('password2')
+                if User.objects.filter(username=data.get("username")):
+                    username_error = 'User with this username is already exists'
+                    return render(request, 'registration.html', {"form": form, "username_error": username_error})
+                else:
+                    if password1 != password2:
+                        pass_error = "Passwords don't match"
+                        return render(request, 'registration.html', {"form": form, "pass_error": pass_error})
+                    else:
+                        user = User.objects.create_user(username=data.get("username"),
+                                                        email=data.get("email"),
+                                                        first_name=data.get("first_name"),
+                                                        last_name=data.get("last_name"))
+                        user.set_password(password1)
+                        user.save()
+                        return HttpResponseRedirect(reverse("login"))
+        return render(request, 'registration.html', {"form": form})
 
 
 def accounts(request):
@@ -26,10 +87,14 @@ def single_account(request, account_id):
 
 
 def all_accounts(request):
-    all_users = User.objects.all()
-    search_form = SearchForm()
-    return render(request, "all_accounts.html", {"all_accounts": all_users,
-                                                 "search_form": search_form})
+    if request.user.is_authenticated:
+        all_users = User.objects.all()
+        search_form = SearchForm()
+        return render(request, "all_accounts.html", {"all_accounts": all_users,
+                                                     "search_form": search_form})
+    else:
+        sign_in_error = "Please sign in"
+        return render(request, "all_accounts.html", {"sign_in_error": sign_in_error})
 
 
 def all_accounts_page_load(request):
@@ -110,4 +175,40 @@ def search(request):
                 return HttpResponse(search_result_json, content_type='application/json')
 
 
+def view_profile(request, pk=None):
+    if pk:
+        user = User.objects.get(pk=pk)
+    else:
+        user = request.user
+    return render(request, 'profile.html', {'user': user})
 
+
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('view_profile'))
+    else:
+        form = EditProfileForm(instance=request.user)
+        return render(request, 'edit_profile.html', {'form': form})
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(data=request.POST, user=request.user)
+
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect(reverse('view_profile'))
+        else:
+            # return redirect(reverse('change_password'))
+            form = PasswordChangeForm(user=request.user)
+            print(request.user)
+            pass_error = "Wrong old password or passwords don't match"
+            return render(request, 'change_password.html', {'form': form, 'pass_error': pass_error})
+    else:
+        form = PasswordChangeForm(user=request.user)
+        return render(request, 'change_password.html', {'form': form})

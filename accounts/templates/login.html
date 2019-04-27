@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+<div>
+    {% block content %}
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            {% for error in form.non_field_errors %}
+                {{ error|escape }}
+            {% endfor %}
+
+            {% if form.username.errors %}
+                {{ form.username.errors }}
+            {% endif %}
+            <div>
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+            </div>
+
+            {% if form.password.errors %}
+                {{ form.password.errors }}
+            {% endif %}
+            <div>
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit">Log In</button>
+        </form>
+    {% endblock %}
+</div>

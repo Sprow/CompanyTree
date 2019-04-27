@@ -8,10 +8,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    {% block head %}
-    {% endblock %}
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static "stylesheet/base.css" %}">
+    {% block head %}
+    {% endblock %}
     <title>Company Tree</title>
 </head>
 <body>
@@ -51,10 +53,18 @@
 {#        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>#}
 {#      </li>#}
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+
+        {% if request.user.is_authenticated %}
+{#            you login as: {{ user.username }} <br>#}
+            <span class="nav_link">you login as:</span>
+            <a class="nav_link" href="{% url 'view_profile' %}">{{ user.username }} </a>
+            <a class="nav_link" href="{% url 'logout' %}">Sign Out</a>
+
+        {% else %}
+            <a class="nav_link" href="{% url 'registration' %}">Registrate</a>
+            <a class="nav_link" href="{% url 'login' %}">Sign In</a>
+        {% endif %}
+
   </div>
 </nav>
     <div>
