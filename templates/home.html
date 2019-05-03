@@ -1,22 +1,28 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "stylesheet/home.css" %}">
+{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="container">{{ boss.first_name }} {{ boss.last_name }}</div>
-        <div class="container">Position: {{ boss.position }}</div>
-        <div class="container">Date joined: {{ boss.date_joined }}</div>
-        <div class="container">Salary: {{ boss.salary }}</div>
-        <br>
-        <div class="container">
-            <h5>subordinates:</h5>
 
-            {% for child in children %}
-                <a class="badge badge-secondary"
-                   href="{% url 'single_account' account_id=child.id %}">{{ child.first_name }} {{ child.last_name }}</a>
-                <br>
-            {% endfor %}
-        </div>
-    </div>
+<form id="home_page" method="POST">
+    {% csrf_token %}
+    <div id="tree"></div>
+
+    <script id="js_template" type="x-tmpl-mustache">
+        {% verbatim %}
+            {{#tree}}
+                    <div class="{{ level }} tree_element" data-id="{{id}}">{{username}}</div>
+            {{/tree}}
+        {% endverbatim %}
+    </script>
+</form>
 
 {% endblock %}
 
+{% block js %}
+        <script src="{% static "javascript/home.js" %}"></script>
+        <script src="{% static "javascript/mustache.min.js" %}"></script>
+{% endblock %}

@@ -15,7 +15,8 @@ class SiteAdmin(admin.ModelAdmin):
         'parent_id',
         'date_joined',
         'salary',
-        'position'
+        'position',
+        'photo'
     )
-    list_display = ('username', 'first_name', 'last_name', 'position')
+    list_display = ('username', 'id', 'first_name', 'last_name', 'position')
 

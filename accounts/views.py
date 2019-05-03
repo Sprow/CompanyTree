@@ -71,11 +71,139 @@ def register_user(request):
 
 
 def accounts(request):
-    boss = User.objects.get(id=1)
-    children = User.objects.filter(parent_id=1)
+    # level_one_and_two = []
+    # ceo = User.objects.filter(parent_id=0)
+    # level_one_and_two.append(ceo)
+    # level2 = User.objects.filter(parent_id=ceo[0].id)
+    # level_one_and_two.extend(level2)
+    #
+    # def get_level_three_and_four(parent_id):
+    #     level_three_and_four_list = []
+    #     level3 = User.objects.filter(parent_id=parent_id)
+    #     [level_three_and_four_list.append([i]) for i in level3]
+    #     for i in level_three_and_four_list:
+    #         i.extend(User.objects.filter(parent_id=i[0].id))
+    #
+    #     return level_three_and_four_list
+    #
+    # def get_level_five(parent_id):
+    #     return User.objects.filter(parent_id=parent_id)
+    #
+    # if request.is_ajax():
+    #     data_json = json.dumps(get_level_three_and_four(5), default=str)
+    #     return HttpResponse(data_json, content_type='application/json')
+    #
+    # data_json = json.dumps(level_one_and_two, default=str)
+    #
+    # return HttpResponse(data_json, content_type='application/json')
+    # print(get_level_three_and_four(5))
+    # for i in level2:
+    #     first_two_levels.append(i)
+    #     ids.append(i.id)
+    # print(first_two_levels)
+    # print(ids)
 
-    return render(request, "home.html", {"boss": boss,
-                                         "children": children})
+    # all_usernames = User.objects.values_list('username', 'id', 'parent_id')
+    # all_users = User.objects.values('username', 'id', 'parent_id')
+    # all_users2 = User.objects.values_list('id', 'parent_id')
+    # # print(all_users2)
+    # # print(all_usernames)
+    # # print(all_usernames2)
+    # boss = all_users[0]
+    # boss['children'] = {}
+    # correct_shuffle = {boss['id']: boss}
+    # # print('correct_shuffle>>>', correct_shuffle)
+    # boss2 = {1: {}}
+    # correct_shuffle2 = {boss['id']: boss}
+    #
+    # def awww2(my_dict):
+    #     for user in all_users:
+    #         for key, val in my_dict.items():
+    #             if user['parent_id'] == key:
+    #                 user['children'] = {}
+    #                 val['children'].update({user['id']: user})
+    #                 awww(val['children'])
+    #
+    # def awww(my_dict):
+    #     for user in all_users:
+    #         for key, val in my_dict.items():
+    #             if user['parent_id'] == key:
+    #                 user['children'] = {}
+    #                 val['children'].update({user['id']: user})
+    #                 awww(val['children'])
+    # # awww(correct_shuffle)
+    # # print(correct_shuffle)
+    #
+    args = {'error': 'no users'}
+    try:
+        boss = User.objects.get(parent_id=0)
+        children = User.objects.filter(parent_id=boss.id)
+        args = {"boss": boss, "children": children}
+    except:
+        pass
+    return render(request, "home.html", args)
+
+
+def tree(request):
+    if request.is_ajax() and request.method == "POST":
+        result_obj = []
+        if int(request.GET.get('parent_id')) == 1:
+            ceo = User.objects.filter(parent_id=0)
+            ceo2 = ceo.values('username', 'id')[0]
+            ceo2["level"] = "level1"
+            result_obj.append(ceo2)
+            level2 = User.objects.filter(parent_id=ceo[0].id)
+            for level2_item in level2.values('username', 'id'):
+                level2_item["level"] = "level2"
+                result_obj.append(level2_item)
+        elif int(request.GET.get('parent_id')) > 1:
+            parent_id = int(request.GET.get('parent_id'))
+            ceo = User.objects.filter(parent_id=0)
+            result_obj.append(ceo.values('username', 'id')[0])
+            level2 = User.objects.filter(parent_id=ceo[0].id)
+            for level2_item in level2.values('username', 'id'):
+                level2_item["level"] = "level2"
+                result_obj.append(level2_item)
+                if level2_item["id"] == parent_id:
+                    level3 = User.objects.filter(parent_id=parent_id)
+                    for level3_item in level3.values('username', 'id'):
+                        level3_item["level"] = "level3"
+                        result_obj.append(level3_item)
+                        level4 = User.objects.filter(parent_id=level3_item['id'])
+                        for level4_item in level4.values('username', 'id'):
+                            level4_item["level"] = "level4"
+                            result_obj.append(level4_item)
+                            level5 = User.objects.filter(parent_id=level4_item['id'])
+                            for level5_item in level5.values('username', 'id'):
+                                level5_item["level"] = "level5"
+                                result_obj.append(level5_item)
+
+
+        # def get_level_three_and_four(parent_id):
+        #     level_three_and_four_list = []
+        #     level3 = User.objects.filter(parent_id=parent_id)
+        #
+        #     for level3_item in level3.values('username', 'id'):
+        #         level3_item["level"] = "level3"
+        #         level_three_and_four_list.append(level3_item)
+        #         level4 = User.objects.filter(parent_id=level3_item['id'])
+        #         for level4_item in level4.values('username', 'id'):
+        #             level4_item["level"] = "level4"
+        #             level_three_and_four_list.append(level4_item)
+        #
+        #     result_obj["level_three_and_four_list"] = level_three_and_four_list
+        #     # return level_three_and_four_list
+        #
+        # def get_level_five(parent_id):
+        #     return User.objects.filter(parent_id=parent_id)
+        #
+        # # print(request.GET.get('parent_id')) __убрать "="___________________________________
+        # if int(request.GET.get('parent_id')) >= 1:
+        #     get_level_three_and_four(int(request.GET.get('parent_id')))
+        result_obj = {'tree': result_obj}
+        data_json = json.dumps(result_obj, default=str)
+
+        return HttpResponse(data_json, content_type='application/json')
 
 
 def single_account(request, account_id):
@@ -88,19 +216,11 @@ def single_account(request, account_id):
 
 def all_accounts(request):
     if request.user.is_authenticated:
-        all_users = User.objects.all()
         search_form = SearchForm()
-        return render(request, "all_accounts.html", {"all_accounts": all_users,
-                                                     "search_form": search_form})
+        return render(request, "all_accounts.html", {"search_form": search_form})
     else:
-        sign_in_error = "Please sign in"
-        return render(request, "all_accounts.html", {"sign_in_error": sign_in_error})
-
-
-def all_accounts_page_load(request):
-    if request.is_ajax():
-        my_json = serializers.serialize('json', User.objects.all())
-        return HttpResponse(my_json, content_type='application/json')
+        auth_error = "Only for authenticated users"
+        return render(request, "all_accounts.html", {"auth_error": auth_error})
 
 
 def search(request):
@@ -170,8 +290,7 @@ def search(request):
                               "data": list(search_result.values())}
 
                 search_result_json = json.dumps(result_obj, default=str)
-                # print('query>', search_result.query)     #sql request
-
+                print(search_result_json)
                 return HttpResponse(search_result_json, content_type='application/json')
 
 
@@ -185,13 +304,13 @@ def view_profile(request, pk=None):
 
 def edit_profile(request):
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
-
+        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect(reverse('view_profile'))
     else:
         form = EditProfileForm(instance=request.user)
+
         return render(request, 'edit_profile.html', {'form': form})
 
 

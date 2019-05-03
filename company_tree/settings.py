@@ -65,19 +65,6 @@ TEMPLATES = [
     },
 ]
 
-# TEMPLATES = [
-#     {
-#         'BACKEND': 'mustachejs',
-#         'DIRS': ['templates'],
-#         'APP_DIRS': False,
-#         'OPTIONS': {
-#             'context_processors': ['...'],
-#             'partials_dir': 'partials',
-#             'file_extension': 'html',
-#         }
-#     },
-#     # ...
-# ]
 
 WSGI_APPLICATION = 'company_tree.wsgi.application'
 
@@ -130,6 +117,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+# MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'accounts.User'
 

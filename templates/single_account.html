@@ -5,6 +5,9 @@
     <div>Position: {{ account.position }}</div>
     <div>Date joined: {{ account.date_joined }}</div>
     <div>Salary: {{ account.salary }}</div>
+    {% if account.photo %}
+        <img src="{{ account.photo.url }}" height="100" alt="img"> <br>
+    {% endif %}
     <br>
     <div>
         {% if children %}

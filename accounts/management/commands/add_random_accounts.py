@@ -15,6 +15,21 @@ class MySeed:
         self.amount_of_workers = amount_of_workers
         self.first_name = self.first_name_list[randint(0, len(self.first_name_list)-1)]
         self.last_name = self.last_name_list[randint(0, len(self.last_name_list)-1)]
+        self.lvl3 = [i for i in range(2, int(self.amount_of_workers / 100 * 5)-1)]
+        self.lvl4 = [i for i in range(int(self.amount_of_workers / 100 * 5), int(self.amount_of_workers / 100 * 15)-1)]
+        self.lvl5 = [i for i in range(int(self.amount_of_workers / 100 * 15), int(self.amount_of_workers / 100 * 45))]
+        # self.lvl_3_min = 2
+        # self.lvl_3_max = (self.amount_of_workers / 100 * 5)-1
+        # self.lvl_4_min = self.amount_of_workers / 100 * 5
+        # self.lvl_4_max = (self.amount_of_workers / 100 * 15)-1
+        # self.lvl_5_min = self.amount_of_workers / 100 * 15
+        # self.lvl_5_max = (self.amount_of_workers / 100 * 45)-1
+        self.lvl_3_min = 1
+        self.lvl_3_max = int((self.amount_of_workers / 100 * 5)-1)
+        self.lvl_4_min = int((self.amount_of_workers / 100 * 5)-1)
+        self.lvl_4_max = int((self.amount_of_workers / 100 * 15)-1)
+        self.lvl_5_min = int((self.amount_of_workers / 100 * 15)-1)
+        self.lvl_5_max = int((self.amount_of_workers / 100 * 45)-1)
 
     first_name_list = ['Ressie', 'Carmine', 'Chi', 'Keeley', 'Dung', 'Richelle', 'Mari', 'Sal', 'Cecil',
                        'Nicole', 'Janee', 'Rigoberto', 'Katheleen', 'Lyman', 'Esteban', 'Madison', 'Shaquana', 'Rickie',
@@ -33,15 +48,42 @@ class MySeed:
             pk = 1
 
         if pk == 1:
-            return None
+            return 0
         elif pk <= int(self.amount_of_workers / 100 * 5):
             return 1
         elif pk <= int(self.amount_of_workers / 100 * 15):
-            return randint(2, int(self.amount_of_workers / 100 * 15)-1)
+            if self.lvl_3_min <= self.lvl_3_max:
+                self.lvl_3_min += 1
+            else:
+                self.lvl_3_min = 1
+                return 2
+            return self.lvl_3_min
+
         elif pk <= int(self.amount_of_workers / 100 * 45):
-            return randint(int(self.amount_of_workers / 100 * 30), int(self.amount_of_workers / 100 * 45)-1)
+            if self.lvl_4_min <= self.lvl_4_max:
+                self.lvl_4_min += 1
+            else:
+                self.lvl_4_min = (self.amount_of_workers / 100 * 5)-1
+                return self.lvl_4_min + 1
+            return self.lvl_4_min + 1
         else:
-            return randint(int(self.amount_of_workers / 100 * 45), self.amount_of_workers)
+            if self.lvl_5_min <= self.lvl_5_max:
+                self.lvl_5_min += 1
+            else:
+                self.lvl_5_min = (self.amount_of_workers / 100 * 15)-1
+                return self.lvl_5_min + 1
+            return self.lvl_5_min
+
+        # if pk == 1:
+        #     return 0
+        # elif pk <= int(self.amount_of_workers / 100 * 5):
+        #     return 1
+        # elif pk <= int(self.amount_of_workers / 100 * 15):
+        #     return randint(2, int(self.amount_of_workers / 100 * 5)-1)
+        # elif pk <= int(self.amount_of_workers / 100 * 45):
+        #     return randint(int(self.amount_of_workers / 100 * 5), int(self.amount_of_workers / 100 * 15)-1)
+        # else:
+        #     return randint(int(self.amount_of_workers / 100 * 15), int(self.amount_of_workers / 100 * 45))
 
     def change_first_name(self, _):
         self.first_name = self.first_name_list[randint(0, len(self.first_name_list)-1)]

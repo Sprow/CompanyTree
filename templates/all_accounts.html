@@ -10,7 +10,7 @@
 {#    {% for name in search_result %}#}
 {#        {{ name.date_joined.year }}#}
 {#    {% endfor %}#}
-    {{ sign_in_error }}
+    {{ auth_error }}
 
     {% if request.user.is_authenticated %}
         <form id="search_form" method="POST">
@@ -83,18 +83,17 @@
                 </script>
             </table>
             <script id="pagination_template" type="x-tmpl-mustache">
-        {% verbatim %}
-            <nav aria-label="...">
-                <ul class="pagination">
-            {{#data}}
-                        <li class="page-item my_pagination_btn" data-page="{{page}}">
-                            <span class="page-link">{{name}}</span>
-                        </li>
-            {{/data}}
-                </ul>
-            </nav>
-        {% endverbatim %}
-
+                {% verbatim %}
+                    <nav aria-label="...">
+                        <ul class="pagination">
+                    {{#data}}
+                                <li class="page-item my_pagination_btn" data-page="{{page}}">
+                                    <span class="page-link">{{name}}</span>
+                                </li>
+                    {{/data}}
+                        </ul>
+                    </nav>
+                {% endverbatim %}
             </script>
             <div id="pagination"></div>
 
