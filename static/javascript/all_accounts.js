@@ -27,8 +27,6 @@ function tableNavigator() {
 
     obj.loadAccounts = function (data) {
         let template = $('#js_template').html();
-        console.log(data);
-        console.log(template);
         Mustache.parse(template);   // optional, speeds up future uses
         let rendered = Mustache.render(template, data);
         $('#my_tbody').html(rendered);

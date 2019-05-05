@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, re
 from django.urls import reverse
 from accounts.models import User
 from accounts.forms import SearchForm
-from django.core import serializers
 
 from django.http import HttpResponse
 
@@ -71,69 +70,6 @@ def register_user(request):
 
 
 def accounts(request):
-    # level_one_and_two = []
-    # ceo = User.objects.filter(parent_id=0)
-    # level_one_and_two.append(ceo)
-    # level2 = User.objects.filter(parent_id=ceo[0].id)
-    # level_one_and_two.extend(level2)
-    #
-    # def get_level_three_and_four(parent_id):
-    #     level_three_and_four_list = []
-    #     level3 = User.objects.filter(parent_id=parent_id)
-    #     [level_three_and_four_list.append([i]) for i in level3]
-    #     for i in level_three_and_four_list:
-    #         i.extend(User.objects.filter(parent_id=i[0].id))
-    #
-    #     return level_three_and_four_list
-    #
-    # def get_level_five(parent_id):
-    #     return User.objects.filter(parent_id=parent_id)
-    #
-    # if request.is_ajax():
-    #     data_json = json.dumps(get_level_three_and_four(5), default=str)
-    #     return HttpResponse(data_json, content_type='application/json')
-    #
-    # data_json = json.dumps(level_one_and_two, default=str)
-    #
-    # return HttpResponse(data_json, content_type='application/json')
-    # print(get_level_three_and_four(5))
-    # for i in level2:
-    #     first_two_levels.append(i)
-    #     ids.append(i.id)
-    # print(first_two_levels)
-    # print(ids)
-
-    # all_usernames = User.objects.values_list('username', 'id', 'parent_id')
-    # all_users = User.objects.values('username', 'id', 'parent_id')
-    # all_users2 = User.objects.values_list('id', 'parent_id')
-    # # print(all_users2)
-    # # print(all_usernames)
-    # # print(all_usernames2)
-    # boss = all_users[0]
-    # boss['children'] = {}
-    # correct_shuffle = {boss['id']: boss}
-    # # print('correct_shuffle>>>', correct_shuffle)
-    # boss2 = {1: {}}
-    # correct_shuffle2 = {boss['id']: boss}
-    #
-    # def awww2(my_dict):
-    #     for user in all_users:
-    #         for key, val in my_dict.items():
-    #             if user['parent_id'] == key:
-    #                 user['children'] = {}
-    #                 val['children'].update({user['id']: user})
-    #                 awww(val['children'])
-    #
-    # def awww(my_dict):
-    #     for user in all_users:
-    #         for key, val in my_dict.items():
-    #             if user['parent_id'] == key:
-    #                 user['children'] = {}
-    #                 val['children'].update({user['id']: user})
-    #                 awww(val['children'])
-    # # awww(correct_shuffle)
-    # # print(correct_shuffle)
-    #
     args = {'error': 'no users'}
     try:
         boss = User.objects.get(parent_id=0)
@@ -178,28 +114,6 @@ def tree(request):
                                 level5_item["level"] = "level5"
                                 result_obj.append(level5_item)
 
-
-        # def get_level_three_and_four(parent_id):
-        #     level_three_and_four_list = []
-        #     level3 = User.objects.filter(parent_id=parent_id)
-        #
-        #     for level3_item in level3.values('username', 'id'):
-        #         level3_item["level"] = "level3"
-        #         level_three_and_four_list.append(level3_item)
-        #         level4 = User.objects.filter(parent_id=level3_item['id'])
-        #         for level4_item in level4.values('username', 'id'):
-        #             level4_item["level"] = "level4"
-        #             level_three_and_four_list.append(level4_item)
-        #
-        #     result_obj["level_three_and_four_list"] = level_three_and_four_list
-        #     # return level_three_and_four_list
-        #
-        # def get_level_five(parent_id):
-        #     return User.objects.filter(parent_id=parent_id)
-        #
-        # # print(request.GET.get('parent_id')) __убрать "="___________________________________
-        # if int(request.GET.get('parent_id')) >= 1:
-        #     get_level_three_and_four(int(request.GET.get('parent_id')))
         result_obj = {'tree': result_obj}
         data_json = json.dumps(result_obj, default=str)
 
@@ -290,7 +204,6 @@ def search(request):
                               "data": list(search_result.values())}
 
                 search_result_json = json.dumps(result_obj, default=str)
-                print(search_result_json)
                 return HttpResponse(search_result_json, content_type='application/json')
 
 
@@ -323,9 +236,7 @@ def change_password(request):
             update_session_auth_hash(request, form.user)
             return redirect(reverse('view_profile'))
         else:
-            # return redirect(reverse('change_password'))
             form = PasswordChangeForm(user=request.user)
-            print(request.user)
             pass_error = "Wrong old password or passwords don't match"
             return render(request, 'change_password.html', {'form': form, 'pass_error': pass_error})
     else:

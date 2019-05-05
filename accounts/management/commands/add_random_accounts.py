@@ -116,6 +116,7 @@ class Command(BaseCommand):
             'username': my_seed.user_name,
             'first_name': my_seed.change_first_name,
             'last_name': my_seed.change_last_name,
+            'photo': "user/0f182cb7-8596-4744-a99f-8d5193a72503.jpg"
         })
 
         inserted_pks = seeder.execute()

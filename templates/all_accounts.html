@@ -62,24 +62,26 @@
                     <th scope="col"><span class="arrow">Salary <span class="arrows"
                                                                      data-sort="salary">&#11015; &#11014;</span></span>
                     </th>
+                    <th scope="col"><span class="arrow">Photo</span>
+                    </th>
                 </tr>
                 </thead>
 
                 <tbody id="my_tbody"></tbody>
                 <script id="js_template" type="x-tmpl-mustache">
-            {% verbatim %}
-                {{#data}}
-                    <tr>
-                        <th>{{id}}</th>
-                        <td>{{first_name}}</td>
-                        <td>{{last_name}}</td>
-                        <td>{{position}}</td>
-                        <td>{{date_joined}}</td>
-                        <td>{{salary}}</td>
-                    </tr>
-                {{/data}}
-            {% endverbatim %}
-
+                    {% verbatim %}
+                        {{#data}}
+                            <tr>
+                                <th>{{id}}</th>
+                                <td>{{first_name}}</td>
+                                <td>{{last_name}}</td>
+                                <td>{{position}}</td>
+                                <td>{{date_joined}}</td>
+                                <td>{{salary}}</td>
+                                <<td><img src="media/{{photo}}" alt="" height="25"></td></td>
+                            </tr>
+                        {{/data}}
+                    {% endverbatim %}
                 </script>
             </table>
             <script id="pagination_template" type="x-tmpl-mustache">

@@ -1,5 +1,4 @@
 {% load static %}
-{#{% load mustachejs %}#}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,13 +16,7 @@
     <title>Company Tree</title>
 </head>
 <body>
-{#    <div id="target">Loading...</div>#}
-{#    <script id="template" type="x-tmpl-mustache">#}
-{#    Hello {{ name }}!#}
-{#    </script>#}
-{#    <nav class="navbar navbar-light bg-light">#}
-{#        <a class="navbar-brand" href="#">All company workers</a>#}
-{#    </nav>#}
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href={% url 'home' %}>RedMountain&trade;</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,34 +25,17 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-{#      <li class="nav-item active">#}
-{#        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>#}
-{#      </li>#}
+
       <li class="nav-item">
         <a class="nav-link" href={% url 'all_accounts' %}>All company workers</a>
       </li>
-{#      <li class="nav-item dropdown">#}
-{#        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-{#          Dropdown#}
-{#        </a>#}
-{#        <div class="dropdown-menu" aria-labelledby="navbarDropdown">#}
-{#          <a class="dropdown-item" href="#">Action</a>#}
-{#          <a class="dropdown-item" href="#">Another action</a>#}
-{#          <div class="dropdown-divider"></div>#}
-{#          <a class="dropdown-item" href="#">Something else here</a>#}
-{#        </div>#}
-{#      </li>#}
-{#      <li class="nav-item">#}
-{#        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>#}
-{#      </li>#}
+
     </ul>
 
         {% if request.user.is_authenticated %}
-{#            you login as: {{ user.username }} <br>#}
             <span class="nav_link">you login as:</span>
             <a class="nav_link" href="{% url 'view_profile' %}">{{ user.username }} </a>
             <a class="nav_link" href="{% url 'logout' %}">Sign Out</a>
-
         {% else %}
             <a class="nav_link" href="{% url 'registration' %}">Registrate</a>
             <a class="nav_link" href="{% url 'login' %}">Sign In</a>
@@ -73,12 +49,7 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-{#    <script src="{% static "javascript/mustache.js" %}"></script>#}
 
-{#    <script type="text/javascript" src="http://github.com/janl/mustache.js/raw/master/mustache.js"></script>#}
-{#    <script type="text/javascript" src="https://raw.githubusercontent.com/janl/mustache.js/master/mustache.js"></script>#}
-{#    <script type="text/javascript" src="http://cdn.jsdelivr.net/gh/janl/mustache.js/master/mustache.js"></script>#}
-{#    <script type="text/javascript" src="http://rawgit.com/janl/mustache.js/master/mustache.js"></script>#}
     {% block js %}
     {% endblock %}
     <!-- Optional JavaScript -->
