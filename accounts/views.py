@@ -95,7 +95,9 @@ def tree(request):
         elif int(request.GET.get('parent_id')) > 1:
             parent_id = int(request.GET.get('parent_id'))
             ceo = User.objects.filter(parent_id=0)
-            result_obj.append(ceo.values('username', 'id')[0])
+            ceo2 = ceo.values('username', 'id')[0]
+            ceo2["level"] = "level1"
+            result_obj.append(ceo2)
             level2 = User.objects.filter(parent_id=ceo[0].id)
             for level2_item in level2.values('username', 'id'):
                 level2_item["level"] = "level2"

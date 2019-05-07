@@ -1,12 +1,24 @@
+.level1 {
+    border: 2px solid #915c0f;
+    border-radius: 5px;
+}
 .level2 {
-    margin-left: 30px;
+    margin-left:25px;
+    border: 2px solid black;
+    border-radius: 5px;
 }
 .level3 {
     margin-left: 60px;
+    border: 2px solid red;
+    border-radius: 5px;
 }
 .level4 {
     margin-left: 90px;
+    border: 2px solid green;
+    border-radius: 5px;
 }
 .level5 {
     margin-left: 120px;
+    border: 2px solid #3c72ff;
+    border-radius: 5px;
 }
